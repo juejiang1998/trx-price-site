@@ -18,7 +18,7 @@ params = {
 res = requests.get(url, headers=headers, params=params)
 data = res.json()
 
-trx = data["data"]["TRX"][0]["quote"]["USD"]
+trx = data["data"]["TRX"]["quote"]["USD"]
 
 output = {
     "price": trx["price"],
