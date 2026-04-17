@@ -24,8 +24,18 @@ res.raise_for_status()
 
 data = res.json()
 
-print("完整返回：")
-print(json.dumps(data, ensure_ascii=False, indent=2))
+trx_info = data["data"][0]
+quote = trx_info["quote"][0]
 
-# 先故意停在这里，先看真实结构
-raise Exception("先看上面打印出来的数据结构")
+output = {
+    "price": quote["price"],
+    "percent_change_24h": quote["percent_change_24h"],
+    "market_cap": quote["market_cap"],
+    "volume_24h": quote["volume_24h"],
+    "last_updated": quote["last_updated"]
+}
+
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(output, f, ensure_ascii=False, indent=2)
+
+print("TRX 数据更新成功")
