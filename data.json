@@ -1,6 +1,7 @@
 {
-  "price": 0,
-  "percent_change_24h": 0,
-  "market_cap": 0,
-  "last_updated": "waiting..."
+  "price": 0.32372235632048457,
+  "percent_change_24h": -0.93851046,
+  "market_cap": 30680819272.385677,
+  "volume_24h": 797872809.2569437,
+  "last_updated": "2026-04-17T10:38:05.000Z"
 }
