@@ -55,7 +55,6 @@
 </head>
 
 <body>
-
   <div class="card">
     <h1>TRX 实时价格</h1>
     <div id="app">加载中...</div>
@@ -67,9 +66,8 @@
         const res = await fetch("./data.json");
         const data = await res.json();
 
-        // ==== 时间转换 UTC → UTC+8 ====
+        // 浏览器会自动把 UTC 时间转成本地时间
         const date = new Date(data.last_updated);
-        date.setHours(date.getHours() + 8);
 
         const formattedTime = date.getFullYear() + "-" +
           String(date.getMonth() + 1).padStart(2, "0") + "-" +
@@ -78,11 +76,9 @@
           String(date.getMinutes()).padStart(2, "0") + ":" +
           String(date.getSeconds()).padStart(2, "0");
 
-        // ==== 涨跌颜色 ====
         const change = Number(data.percent_change_24h);
         const changeClass = change >= 0 ? "green" : "red";
 
-        // ==== 页面渲染 ====
         document.getElementById("app").innerHTML = `
           <div class="price">$${Number(data.price).toFixed(4)}</div>
 
@@ -110,6 +106,5 @@
 
     loadData();
   </script>
-
 </body>
 </html>
