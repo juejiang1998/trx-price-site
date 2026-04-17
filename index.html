@@ -1,30 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>TRX价格</title>
+  <title>TRX 实时价格</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 40px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .item {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .green {
+      color: green;
+    }
+
+    .red {
+      color: red;
+    }
+
+    .time {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:Arial; margin-top:50px;">
 
-<h1>TRX 实时价格</h1>
+<body>
 
-<div id="app">加载中...</div>
+  <div class="card">
+    <h1>TRX 实时价格</h1>
+    <div id="app">加载中...</div>
+  </div>
 
-<script>
-async function loadData() {
-  const res = await fetch("./data.json");
-  const data = await res.json();
+  <script>
+    async function loadData() {
+      try {
+        const res = await fetch("./data.json");
+        const data = await res.json();
 
-  document.getElementById("app").innerHTML = `
-    <h2>$${Number(data.price).toFixed(4)}</h2>
-    <p>24h涨跌：${Number(data.percent_change_24h).toFixed(2)}%</p>
-    <p>市值：$${Number(data.market_cap).toLocaleString()}</p>
-    <p>更新时间：${data.last_updated}</p>
-  `;
-}
+        // ==== 时间转换 UTC → UTC+8 ====
+        const date = new Date(data.last_updated);
+        date.setHours(date.getHours() + 8);
 
-loadData();
-</script>
+        const formattedTime = date.getFullYear() + "-" +
+          String(date.getMonth() + 1).padStart(2, "0") + "-" +
+          String(date.getDate()).padStart(2, "0") + " " +
+          String(date.getHours()).padStart(2, "0") + ":" +
+          String(date.getMinutes()).padStart(2, "0") + ":" +
+          String(date.getSeconds()).padStart(2, "0");
+
+        // ==== 涨跌颜色 ====
+        const change = Number(data.percent_change_24h);
+        const changeClass = change >= 0 ? "green" : "red";
+
+        // ==== 页面渲染 ====
+        document.getElementById("app").innerHTML = `
+          <div class="price">$${Number(data.price).toFixed(4)}</div>
+
+          <div class="item ${changeClass}">
+            24h涨跌：${change.toFixed(2)}%
+          </div>
+
+          <div class="item">
+            市值：$${Number(data.market_cap).toLocaleString()}
+          </div>
+
+          <div class="item">
+            24h交易量：$${Number(data.volume_24h).toLocaleString()}
+          </div>
+
+          <div class="time">
+            最后更新：${formattedTime}（UTC+8）
+          </div>
+        `;
+      } catch (error) {
+        document.getElementById("app").innerHTML = "数据加载失败";
+        console.error(error);
+      }
+    }
+
+    loadData();
+  </script>
 
 </body>
 </html>
