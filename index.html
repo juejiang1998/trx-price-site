@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TRX价格</title>
+</head>
+<body style="text-align:center; font-family:Arial; margin-top:50px;">
+
+<h1>TRX 实时价格</h1>
+
+<div id="app">加载中...</div>
+
+<script>
+async function loadData() {
+  const res = await fetch("./data.json");
+  const data = await res.json();
+
+  document.getElementById("app").innerHTML = `
+    <h2>$${Number(data.price).toFixed(4)}</h2>
+    <p>24h涨跌：${Number(data.percent_change_24h).toFixed(2)}%</p>
+    <p>市值：$${Number(data.market_cap).toLocaleString()}</p>
+    <p>更新时间：${data.last_updated}</p>
+  `;
+}
+
+loadData();
+</script>
+
+</body>
+</html>
